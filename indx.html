@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رحمنكو القابضة</title>
+    <meta name="description" content="تطبيق رحمنكو القابضة لإدارة المشتريات والمبيعات">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                fontFamily: {
+                    sans: ['Tajawal', 'sans-serif'],
+                },
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                        success: '#16a34a',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        [dir="rtl"] .rtl-mr-2 {
+            margin-right: 0.5rem;
+        }
+        [dir="rtl"] .rtl-ml-2 {
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-2xl font-bold text-primary">رحمنكو القابضة</h1>
+            <p class="text-gray-600">نظام إدارة العمليات</p>
+        </header>
+
+        <main id="app" class="bg-white rounded-lg shadow-md p-6">
+            <!-- Initial screen with two buttons -->
+            <div id="main-menu" class="text-center">
+                <h2 class="text-xl font-semibold mb-6">اختر نوع العملية</h2>
+                <div class="space-y-4">
+                    <button onclick="showForm('buy')" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg flex items-center justify-center rtl-mr-2">
+                        <i class="fas fa-shopping-cart rtl-ml-2"></i>
+                        <span>شراء من عميل</span>
+                    </button>
+                    <button onclick="showForm('sell')" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 px-4 rounded-lg flex items-center justify-center rtl-mr-2">
+                        <i class="fas fa-cash-register rtl-ml-2"></i>
+                        <span>بيع منتج</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Buy from Client Form -->
+            <form id="buy-form" class="hidden" onsubmit="handleSubmit(event, 'buy')">
+                <h2 class="text-xl font-semibold mb-6 text-green-600 flex items-center">
+                    <i class="fas fa-shopping-cart rtl-ml-2"></i>
+                    <span>شراء من عميل</span>
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="buy-client-name" class="block text-sm font-medium text-gray-700">اسم العميل</label>
+                        <input type="text" id="buy-client-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="buy-phone" class="block text-sm font-medium text-gray-700">رقم الجوال</label>
+                        <input type="tel" id="buy-phone" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="buy-original-price" class="block text-sm font-medium text-gray-700">السعر الأصلي للمنتج</label>
+                        <input type="number" id="buy-original-price" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="buy-transferred-amount" class="block text-sm font-medium text-gray-700">المبلغ المحول للعميل</label>
+                        <input type="number" id="buy-transferred-amount" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="buy-employee" class="block text-sm font-medium text-gray-700">اسم الموظف</label>
+                        <select id="buy-employee" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="">اختر الموظف</option>
+                            <option value="خالد">خالد</option>
+                            <option value="تركي">تركي</option>
+                            <option value="ماجد">ماجد</option>
+                            <option value="نايف">نايف</option>
+                            <option value="فهد">فهد</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="buy-time" class="block text-sm font-medium text-gray-700">وقت العملية</label>
+                        <input type="datetime-local" id="buy-time" readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100">
+                    </div>
+                    
+                    <div>
+                        <label for="buy-notes" class="block text-sm font-medium text-gray-700">ملاحظات (اختياري)</label>
+                        <textarea id="buy-notes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="buy-receipt" class="block text-sm font-medium text-gray-700">إرفاق إيصال التحويل</label>
+                        <input type="file" id="buy-receipt" accept=".pdf,.jpg,.jpeg,.png" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-secondary">
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex space-x-4 space-x-reverse">
+                    <button type="button" onclick="goBack()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
+                        رجوع
+                    </button>
+                    <button type="submit" class="flex-1 bg-primary hover:bg-secondary text-white py-2 px-4 rounded-md">
+                        حفظ البيانات
+                    </button>
+                </div>
+            </form>
+
+            <!-- Sell Product Form -->
+            <form id="sell-form" class="hidden" onsubmit="handleSubmit(event, 'sell')">
+                <h2 class="text-xl font-semibold mb-6 text-orange-600 flex items-center">
+                    <i class="fas fa-cash-register rtl-ml-2"></i>
+                    <span>بيع منتج</span>
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="sell-client-name" class="block text-sm font-medium text-gray-700">اسم العميل</label>
+                        <input type="text" id="sell-client-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-phone" class="block text-sm font-medium text-gray-700">رقم الجوال</label>
+                        <input type="tel" id="sell-phone" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-original-price" class="block text-sm font-medium text-gray-700">السعر الأصلي للمنتج</label>
+                        <input type="number" id="sell-original-price" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-transferred-amount" class="block text-sm font-medium text-gray-700">المبلغ المحول للعميل</label>
+                        <input type="number" id="sell-transferred-amount" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary" oninput="calculateProfit()">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-sale-amount" class="block text-sm font-medium text-gray-700">المبلغ المحصل من البيع</label>
+                        <input type="number" id="sell-sale-amount" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary" oninput="calculateProfit()">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-profit" class="block text-sm font-medium text-gray-700">الربح</label>
+                        <input type="number" id="sell-profit" readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-employee" class="block text-sm font-medium text-gray-700">اسم الموظف</label>
+                        <select id="sell-employee" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="">اختر الموظف</option>
+                            <option value="خالد">خالد</option>
+                            <option value="تركي">تركي</option>
+                            <option value="ماجد">ماجد</option>
+                            <option value="نايف">نايف</option>
+                            <option value="فهد">فهد</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="sell-time" class="block text-sm font-medium text-gray-700">وقت العملية</label>
+                        <input type="datetime-local" id="sell-time" readonly class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100">
+                    </div>
+                    
+                    <div>
+                        <label for="sell-notes" class="block text-sm font-medium text-gray-700">ملاحظات (اختياري)</label>
+                        <textarea id="sell-notes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary"></textarea>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex space-x-4 space-x-reverse">
+                    <button type="button" onclick="goBack()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md">
+                        رجوع
+                    </button>
+                    <button type="submit" class="flex-1 bg-primary hover:bg-secondary text-white py-2 px-4 rounded-md">
+                        حفظ البيانات
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="success-message" class="hidden text-center py-8">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
+                </div>
+                <h3 class="mt-3 text-lg font-medium text-gray-900">تم حفظ البيانات بنجاح</h3>
+                <div class="mt-6">
+                    <button onclick="resetApp()" class="bg-primary hover:bg-secondary text-white py-2 px-4 rounded-md">
+                        عملية جديدة
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Google Apps Script Deployment URL
+        https://script.google.com/macros/s/AKfycby5ioSb1EjOuYVt9KA_58b5eln7RBXOYsj6t-IO4itcYVmDmT9wUsjsLkV0GKYRaKTn/exec;
+
+        // Set current time for both forms
+        function setCurrentTime() {
+            const now = new Date();
+            const timeString = now.toISOString().slice(0, 16);
+            document.getElementById('buy-time').value = timeString;
+            document.getElementById('sell-time').value = timeString;
+            return now;
+        }
+
+        // Calculate profit for sell form
+        function calculateProfit() {
+            const transferred = parseFloat(document.getElementById('sell-transferred-amount').value) || 0;
+            const sale = parseFloat(document.getElementById('sell-sale-amount').value) || 0;
+            const profit = sale - transferred;
+            document.getElementById('sell-profit').value = profit.toFixed(2);
+        }
+
+        // Show selected form
+        function showForm(formType) {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('buy-form').classList.add('hidden');
+            document.getElementById('sell-form').classList.add('hidden');
+            
+            if (formType === 'buy') {
+                document.getElementById('buy-form').classList.remove('hidden');
+            } else {
+                document.getElementById('sell-form').classList.remove('hidden');
+            }
+            
+            setCurrentTime();
+        }
+
+        // Go back to main menu
+        function goBack() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('buy-form').classList.add('hidden');
+            document.getElementById('sell-form').classList.add('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+        }
+
+        // Handle form submission
+        async function handleSubmit(event, formType) {
+            event.preventDefault();
+            
+            const formData = new FormData();
+            const transactionTime = setCurrentTime();
+            
+            if (formType === 'buy') {
+                formData.append('type', 'buy');
+                formData.append('clientName', document.getElementById('buy-client-name').value);
+                formData.append('phone', document.getElementById('buy-phone').value);
+                formData.append('originalPrice', document.getElementById('buy-original-price').value);
+                formData.append('transferredAmount', document.getElementById('buy-transferred-amount').value);
+                formData.append('employee', document.getElementById('buy-employee').value);
+                formData.append('time', transactionTime.toISOString());
+                formData.append('notes', document.getElementById('buy-notes').value);
+                
+                const receiptFile = document.getElementById('buy-receipt').files[0];
+                if (receiptFile) {
+                    formData.append('receipt', receiptFile);
+                }
+            } else {
+                formData.append('type', 'sell');
+                formData.append('clientName', document.getElementById('sell-client-name').value);
+                formData.append('phone', document.getElementById('sell-phone').value);
+                formData.append('originalPrice', document.getElementById('sell-original-price').value);
+                formData.append('transferredAmount', document.getElementById('sell-transferred-amount').value);
+                formData.append('saleAmount', document.getElementById('sell-sale-amount').value);
+                formData.append('profit', document.getElementById('sell-profit').value);
+                formData.append('employee', document.getElementById('sell-employee').value);
+                formData.append('time', transactionTime.toISOString());
+                formData.append('notes', document.getElementById('sell-notes').value);
+            }
+            
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    document.getElementById('main-menu').classList.add('hidden');
+                    document.getElementById('buy-form').classList.add('hidden');
+                    document.getElementById('sell-form').classList.add('hidden');
+                    document.getElementById('success-message').classList.remove('hidden');
+                } else {
+                    alert('حدث خطأ أثناء حفظ البيانات. يرجى المحاولة مرة أخرى.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('حدث خطأ في الاتصال بالخادم. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.');
+            }
+        }
+
+        // Reset the app to initial state
+        function resetApp() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('buy-form').classList.add('hidden');
+            document.getElementById('sell-form').classList.add('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+            
+            // Reset all form fields
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => form.reset());
+        }
+
+        // Initialize the app
+        setCurrentTime();
+    </script>
+</body>
+</html>
